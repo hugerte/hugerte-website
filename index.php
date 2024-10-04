@@ -13,7 +13,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 });
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$url = rtrim($url, '');
+$url = rtrim($url, '/');
 if (empty($url)) {$url = '/';}
 $routeInfo = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $url);
 
