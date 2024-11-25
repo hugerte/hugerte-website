@@ -9,7 +9,7 @@ class Redirect {
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $r->get('/', fn () => file_get_contents('views/index.html'));
     $r->get('/powered-by-hugerte', fn () => new Redirect('/', 307)); // TODO: Maybe dedicated page later.
-    $r->get('/docs/hugerte/1/changelog', fn () => file_get_contents('views/changelog-1.html'));
+    $r->get('/docs/hugerte/1/changelog', fn () => new Redirect('https://github.com/hugerte/hugerte/blob/main/modules/hugerte/CHANGELOG.md'));
 });
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
