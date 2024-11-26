@@ -1,25 +1,21 @@
-<!-- This file contains modified example code from https://getbootstrap.com/docs/5.3/examples/heroes/ (Heroes · Bootstrap v5.3), licensed CC BY 3.0 https://creativecommons.org/licenses/by/3.0/. Copyright 2011-2024 The Bootstrap Authors. https://github.com/twbs/bootstrap/graphs/contributors -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>HugeRTE, your next WYSIWYG editor</title>
+    <title>HugeRTE: Taking WYSYWIG to the next level.</title>
     <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body>
     <main>
-      <div class="px-4 my-5 text-center">
-        <h1 class="display-4 fw-bold text-body-emphasis">HugeRTE, your next WYSIWYG editor</h1>
-        <div class="col-lg-6 mx-auto">
-          <p class="lead mb-4">Enjoy the power of a 100% free and permissively-licensed web-based Rich Text Editor, ready for use in your next great project.</p>
-          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
-              <a role="button" class="btn btn-primary btn-lg px-4 me-sm-3" href="https://github.com/hugerte/hugerte">GitHub repository</a>
-              <a role="button" class="btn btn-outline-secondary btn-lg px-4" href="https://github.com/orgs/hugerte/discussions">GitHub discussions</a>
-          </div>
-        </div>
-        <div class="container px-5">
-          <p>Try it life:</p>
+      <div style="min-height: 100vh" class="container d-flex justify-content-center align-items-center">
+        <div class="text-center">
+          <h1>
+            HugeRTE: Taking WYSYWIG to the next level.
+            <br>
+            Full of Features, Open Source and Free Forever. MIT licensed.
+          </h1>
+          <p class="lead">We've forked the last MIT-licensed commit of the popular <a href="https://github.com/tinymce/tinymce">TinyMCE</a> WYSIWYG editor as they switched to a GPL-or-pay license model and we want to keep it free for everyone. We're working at improving the codebase, adding new features and fixing bugs.</p>
           <noscript>
             <div class="alert alert-warning d-flex align-items-center" role="alert">
               <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:" width="1rem" height="1rem" style="vertical-align: -.125em;">
@@ -28,24 +24,19 @@
               You must enable JavaScript to use HugeRTE.
             </div>
           </noscript>
-          <div class="spinner-border" role="status" id="spinner">
+          <div class="spinner-border mb-2" role="status" id="spinner">
             <span class="visually-hidden">Loading HugeRTE...</span>
           </div>
           <textarea id="editor" class="d-none"></textarea>
+          <div class="d-flex justify-content-center gap-3 mb-3 mt-3">
+            <a href="https://github.com/hugerte/hugerte" target="_blank" class="btn btn-primary btn-lg">GitHub Repository</a>
+            <a href="https://github.com/orgs/hugerte/discussions" target="_blank" class="btn btn-outline-secondary btn-lg">GitHub Discussions</a>
+          </div>
         </div>
-      </div>
-      <div class="bg-body-tertiary py-4">
-        <div class="container text-center">
-          <h2>Install HugeRTE</h2>
-          <p>Installation instructions are available in the <a href="https://github.com/hugerte/hugerte?tab=readme-ov-file#hugerte">GitHub README</a> for now.
-        </div>
-      </div>
-      <div class="text-bg-dark py-2">
-        <div class="container">More awesome stuff is following soon!</div>
       </div>
     </main>
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/node_modules/hugerte/hugerte.min.js?v=1.0.4"></script>
-    <script>hugerte.init({selector: '#editor', plugins: 'accordion advlist anchor autolink autoresize autosave charmap code codesample directionality emoticons fullscreen help image insertdatetime link lists media nonbreaking pagebreak preview quickbars save searchreplace table template visualblocks visualchars wordcount', init_instance_callback: () => document.getElementById("spinner").remove()});</script>
+    <script>hugerte.init({selector: '#editor', plugins: 'accordion advlist anchor autolink autosave charmap code codesample directionality emoticons fullscreen help image insertdatetime link lists media nonbreaking pagebreak preview quickbars save searchreplace table template visualblocks visualchars wordcount', init_instance_callback: () => document.getElementById("spinner").remove()});</script>
   </body>
 </html>
