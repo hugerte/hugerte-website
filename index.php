@@ -8,6 +8,11 @@ class Redirect {
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $r->get('/', fn () => file_get_contents('views/index.html'));
+    $r->post('/survey', function () {
+        mail('admin@hugerte.org', 'Somebody did the HugeRTE survey!', json_encode($_POST, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), 'From: survey-handler@hugerte.org');
+        return new Redirect('/survey-done', 303);
+    });
+    $r->get('/survey-done', fn () => 'Thank you for completing our survey. <a href="/">Back to home.</a>');
     $r->get('/powered-by-hugerte', fn () => new Redirect('/', 307)); // TODO: Maybe dedicated page later.
     $r->get('/docs/hugerte/1/changelog', fn () => new Redirect('https://github.com/hugerte/hugerte/blob/main/modules/hugerte/CHANGELOG.md'));
     $r->get('/docs/hugerte/1/vite-es6-npm', fn () => new Redirect('https://github.com/hugerte/hugerte-docs/?tab=readme-ov-file#bundling'));

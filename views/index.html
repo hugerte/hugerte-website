@@ -12,11 +12,17 @@
     <div class="container d-flex justify-content-center align-items-center min-vh-100 main-container">
       <div class="text-center">
         <h1 class="mb-3">HugeRTE: Taking WYSIWYG to the Next Level</h1>
-          <p><b>Full of Features, Open Source, and Free Forever. MIT licensed.</b></p>
-          <p class="lead">
+        <p><b>Full of Features, Open Source, and Free Forever. MIT licensed.</b></p>
+        <p class="lead">
           We've forked the last MIT-licensed commit of the popular
           <a href="https://github.com/tinymce/tinymce" target="_blank" rel="noopener noreferrer">TinyMCE</a> WYSIWYG editor as they switched to a GPL-or-pay license model and we want to keep it free for everyone. We're working at improving the codebase, adding new features and fixing bugs.
         </p>
+        <div class="alert alert-primary d-flex align-items-center" role="alert">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="1rem" height="1rem" class="bi bi-info-circle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="none" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+          </svg>
+          <span><b>Already using HugeRTE?</b> <a href="javascript:void(0)" role="button" class="alert-link" data-bs-target="#survey" data-bs-toggle="modal">Help shape its future by completing our survey!</a></span>
+        </div>
         <noscript>
           <div class="alert alert-warning d-flex align-items-center" role="alert">
             <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:" width="1rem" height="1rem">
@@ -36,6 +42,69 @@
       </div>
     </div>
   </main>
+  <div class="modal fade" id="survey" tabindex="-1" aria-labelledby="surveytitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="surveytitle">HugeRTE Survey</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post" action="/survey">
+          <div class="modal-body">
+            <p>Help shape the future of HugeRTE by completing this survey!</p>
+            <p>We need your feedback to help us prioritize our next features and improve HugeRTE.</p>
+            <p class="text-danger">By submitting this form, you agree that we may use, modify, and distribute your input for any or no reason and in any form whatsoever, including sharing the results of this survey with others, privately or publicly. This form is not intended to be used for submitting any sensitive or GDPR-controlled data. Your survey data will be saved without a connection to your IP address. If you want to contact us privately, please <a href="mailto:admin@hugerte.org" class="alert-link">email us</a> instead.</p>
+            <!-- NOTE: The alert-link above is intentional. Why not? -->
+            <p>All fields in this survey are optional; you only need to answer the ones that you want to.</p>
+            <div class="mb-3">
+              <label for="field1" class="form-label">Are you using HugeRTE for a personal, commercial or other type of project?</label>
+              <textarea class="form-control" id="field1" name="field1"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="field2" class="form-label">Are you still using TinyMCE or any other WYSIWYG editor for some projects of yours? If yes, which version of them?</label>
+              <textarea class="form-control" id="field2" name="field2"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="field3" class="form-label">Do you miss any of the commercial TinyMCE features in HugeRTE?</label>
+              <textarea class="form-control" id="field3" name="field3"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="field4" class="form-label">Which features do you think we should add to HugeRTE in the short term?</label>
+              <textarea class="form-control" id="field4" name="field4"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="field5" class="form-label">Which features do you think we should add to HugeRTE in the long term?</label>
+              <textarea class="form-control" id="field5" name="field5"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="field6" class="form-label">Which APIs of the HugeRTE editor are you using in addition to the <code>hugerte.init</code> method, or in a setup callback in this method? Are there any refinements to these APIs that you would like to see?</label>
+              <textarea class="form-control" id="field6" name="field6"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="field8" class="form-label">Are you bundling HugeRTE into your frontend bundle, copying/accessing the distribution/node_modules folder of it directly or loading it from a CDN like jsDelivr? Which build tools (Rollup, Vite, Webpack etc.) are you using / which CDN do you use (if applicable)?</label>
+              <textarea class="form-control" id="field8" name="field8"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="field9" class="form-label">Are you using any framework like React, Vue, Svelte, Van.js, Angular, Blazor, jQuery, Ruby on Rails, etc.? If yes, which one? If you are using React or Vue, are you using the <a href="https://github.com/hugerte/hugerte-docs?tab=readme-ov-file#integrations-with-frameworks" target="_blank">integrations</a> we provide for them?</label>
+              <textarea class="form-control" id="field9" name="field9"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="field10" class="form-label">If HugeRTE would accept donations and provide a paid support plan (e.g. by telephone; investigation of errors in complicated code bases / non-open source plugins created by you) for financial supporters in the future, how likely is it that you would use it?</label>
+              <textarea class="form-control" id="field10" name="field10"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="field11" class="form-label">Do you have any other ideas or suggestions for HugeRTE?</label>
+              <textarea class="form-control" id="field11" name="field11"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/node_modules/hugerte/hugerte.min.js?v=1.0.6"></script>
   <script>
