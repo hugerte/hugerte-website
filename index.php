@@ -9,7 +9,7 @@ class Redirect {
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $r->get('/', fn () => file_get_contents('views/index.html'));
     $r->post('/survey', function () {
-        if (!isset($_POST['humanandnotrobot']) || $_POST['humanandnotrobot'] !== 'yeahjsworksfine') {
+        if (!isset($_POST['honeytastypot']) || $_POST['honeytastypot'] !== 'yeahjsworksfine') {
             die("You're a robot or have disabled JS. Therefore we have not saved your survey data.");
         }
         mail('admin@hugerte.org', 'Somebody did the HugeRTE survey!', json_encode($_POST, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), 'From: survey-handler@hugerte.org');
