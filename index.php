@@ -19,6 +19,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->get('/powered-by-hugerte', fn () => new Redirect('/', 307)); // TODO: Maybe dedicated page later.
     $r->get('/docs/hugerte/1/changelog', fn () => new Redirect('https://github.com/hugerte/hugerte/blob/main/modules/hugerte/CHANGELOG.md'));
     $r->get('/docs/hugerte/1/vite-es6-npm', fn () => new Redirect('https://github.com/hugerte/hugerte-docs/?tab=readme-ov-file#bundling'));
+    // x: cloud, pm, zip, ref
+    $r->get('/docs/hugerte/1/angular-{x}', fn () => new Redirect('https://github.com/hugerte/hugerte-docs/blob/main/integrations/angular.md'));
     $r->get('/docs/hugerte/1/{page}', fn ($params) => <<<EOF
         <!DOCTYPE html>
         <html lang="en">
