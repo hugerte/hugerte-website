@@ -28,12 +28,20 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>Docs page redirection | HugeRTE</title>
-            <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+            <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; background: #f8fafc; margin: 0; padding: 0; }
+              .wrap { max-width: 780px; margin: 3rem auto; padding: 0 1.5rem; }
+              h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 1rem; }
+              p { line-height: 1.7; text-align: justify; }
+              a { color: #2563eb; }
+              a:hover { color: #1d4ed8; }
+              code { background: #e2e8f0; padding: 0.1em 0.35em; border-radius: 4px; font-size: 0.9em; }
+            </style>
           </head>
           <body>
-            <main class="container mt-3">
+            <main class="wrap">
               <h1>We do not have docs for this topic here yet.</h1>
-              <p style="text-align: justify;">Please visit the <a href="https://tiny.cloud/docs/tinymce/6/$params[page]" id="link">TinyMCE docs page</a>, but note that you have to replace every instance of <code>tinymce</code> by <code>hugerte</code> in your code. We've decided to write docs for HugeRTE ourselves instead of copying the ones from TinyMCE over. The TinyMCE docs are licensed under an <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike 3.0 Unported</a> license, which could create legal problems when copying code snippets (at least larger ones) into a codebase that is used for commercial purposes or that is distributed under licenses different than CC-BY-NC-SA. This does not match the neither the MIT nor the GPL license used by TinyMCE today. TinyMCE isn't the only open source project which licenses its documentation under terms that could create legal issues for commercial projects although the license of the editor itself was permissive. There is even a project that licenses its docs under a license that prohibits publishing modifications of it (not explicitly excluding code samples!) although the license of the source code of the project itself is MIT.<br>Anyway, at HugeRTE, we're going to write MIT-licensed docs for our project ourselves. <a href="https://github.com/hugerte/hugerte-docs">This repo is the start.</a></p>
+              <p>Please visit the <a href="https://tiny.cloud/docs/tinymce/6/$params[page]" id="link">TinyMCE docs page</a>, but note that you have to replace every instance of <code>tinymce</code> by <code>hugerte</code> in your code. We've decided to write docs for HugeRTE ourselves instead of copying the ones from TinyMCE over. The TinyMCE docs are licensed under an <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike 3.0 Unported</a> license, which could create legal problems when copying code snippets (at least larger ones) into a codebase that is used for commercial purposes or that is distributed under licenses different than CC-BY-NC-SA. This does not match either the MIT or the GPL license used by TinyMCE today. TinyMCE isn't the only open source project which licenses its documentation under terms that could create legal issues for commercial projects although the license of the editor itself was permissive. There is even a project that licenses its docs under a license that prohibits publishing modifications of it (not explicitly excluding code samples!) although the license of the source code of the project itself is MIT.<br>Anyway, at HugeRTE, we're going to write MIT-licensed docs for our project ourselves. <a href="https://github.com/hugerte/hugerte-docs">This repo is the start.</a></p>
             </main>
             <script>
                 document.querySelector('#link').href = document.querySelector('#link').href + (location.hash ?? '');
