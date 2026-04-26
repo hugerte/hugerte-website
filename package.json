@@ -1,6 +1,3 @@
 {
-  "dependencies": {
-    "bootstrap": "^5.3.3",
-    "hugerte": "^1.0.4"
-  }
+  "dependencies": {}
 }
