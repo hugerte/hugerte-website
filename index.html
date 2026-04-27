@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HugeRTE – The Free, Open-Source WYSIWYG Editor</title>
+  <meta name="description" content="HugeRTE is a free, MIT-licensed, open-source WYSIWYG editor. No API key required. Forked from TinyMCE, full of features, free forever.">
+  <link rel="canonical" href="https://hugerte.org/">
+  <meta property="og:title" content="HugeRTE – The Free, Open-Source WYSIWYG Editor">
+  <meta property="og:description" content="A free, MIT-licensed WYSIWYG editor. Forked from TinyMCE. No API key required.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hugerte.org/">
+  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@2.1.0/dist/iconify-icon.min.js" defer></script>
+
+  <style>
+    @import url('https://fonts.bunny.net/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.bunny.net/css2?family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --bg-color: #050505;
+      --bg-surface: #0f0f11;
+      --bg-surface-2: #16161a;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-subtle: #6b7280;
+      --border-color: #27272a;
+      --border-strong: #3f3f46;
+      --accent-color: #3b82f6;
+      --accent-2: #a78bfa;
+      --accent-glow: rgba(59, 130, 246, 0.4);
+      --gradient-text: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      --gradient-accent: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: var(--accent-color); }
+    a:hover { color: #60a5fa; }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    .container-narrow {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(5, 5, 5, 0.75);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 72px;
+    }
+    .brand {
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+      font-size: 0.95rem;
+    }
+    .nav-links a:hover { color: var(--text-main); }
+
+    .btn {
+      display: inline-block;
+      padding: 0.6rem 1.4rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    .btn-primary {
+      background: var(--accent-color);
+      color: #fff !important;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+    .btn-primary:hover {
+      background: #2563eb;
+      box-shadow: 0 0 25px var(--accent-glow);
+      transform: translateY(-1px);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-main) !important;
+      border-color: var(--border-strong);
+    }
+    .btn-ghost:hover {
+      border-color: var(--text-muted);
+      background: var(--bg-surface);
+    }
+    .btn-pink {
+      background: linear-gradient(135deg, #ec4899, #f472b6);
+      color: #fff !important;
+      box-shadow: 0 0 15px rgba(236, 72, 153, 0.35);
+    }
+    .btn-pink:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 25px rgba(236, 72, 153, 0.5);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 7rem 0 4rem;
+      text-align: center;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      z-index: -1;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+    }
+    .badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+    .hero h1 {
+      font-size: clamp(2.6rem, 7vw, 4.8rem);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.04em;
+    }
+    .hero h1 span {
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transition: none !important;
+      animation: none !important;
+    }
+    .hero p.lead {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+      color: var(--text-subtle);
+      font-size: 0.9rem;
+    }
+    .hero-meta span { display: inline-flex; align-items: center; gap: 0.5rem; }
+    .hero-meta svg { width: 16px; height: 16px; opacity: 0.8; }
+
+    /* Section base */
+    section { padding: 5rem 0; }
+    .section-header {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 3rem;
+    }
+    .section-header h2 {
+      font-size: clamp(1.9rem, 4vw, 2.5rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+    .eyebrow {
+      display: inline-block;
+      color: var(--accent-2);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Live demo */
+    .demo {
+      padding-top: 1rem;
+      padding-bottom: 5rem;
+    }
+
+
+    #demo-spinner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 480px;
+      color: var(--text-muted);
+      gap: 0.75rem;
+    }
+    #demo-spinner .ring {
+      width: 24px; height: 24px;
+      border: 2px solid var(--border-strong);
+      border-top-color: var(--accent-color);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #editor-host { display: none; }
+    #editor-host.ready { display: block; }
+
+
+
+    .noscript-warning {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+      padding: 1rem 1.25rem;
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    /* Features */
+    .features { background: linear-gradient(180deg, transparent, rgba(59,130,246,0.04), transparent); }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.75rem;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+    .feature:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-strong);
+      background: var(--bg-surface-2);
+    }
+    .feature-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: rgba(59, 130, 246, 0.12);
+      color: #93c5fd;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .feature h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .feature p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Integrations / Tab switcher */
+    .integrations-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    .tabs {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-surface-2);
+      scrollbar-width: thin;
+    }
+    .tab {
+      flex: 0 0 auto;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+    .tab:hover { color: var(--text-main); background: rgba(255,255,255,0.02); }
+    .tab.active {
+      color: var(--text-main);
+      border-bottom-color: var(--accent-color);
+      background: var(--bg-surface);
+    }
+    .tab .tab-icon {
+      width: 22px; height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+    .tab .tab-icon iconify-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+    .tab-panels { padding: 1.75rem; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .tab-panel h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .tab-panel .panel-desc {
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+    }
+    .tab-panel-actions {
+      margin-top: 1.25rem;
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .tab-panel-actions a {
+      font-size: 0.85rem;
+      padding: 0.45rem 1rem;
+    }
+
+    /* Code blocks */
+    pre {
+      background: #07070a;
+      padding: 1.25rem;
+      border-radius: 0.6rem;
+      overflow-x: auto;
+      border: 1px solid #1f1f23;
+      position: relative;
+    }
+    code {
+      font-family: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.85rem;
+      color: #e5e7eb;
+      line-height: 1.55;
+    }
+    .code-label {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.75rem;
+      font-size: 0.7rem;
+      color: var(--text-subtle);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: var(--bg-surface);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+    }
+    .token.keyword { color: #c678dd; }
+    .token.string  { color: #98c379; }
+    .token.function{ color: #61afef; }
+    .token.tag     { color: #e06c75; }
+    .token.attr    { color: #d19a66; }
+    .token.comment { color: #6b7280; font-style: italic; }
+    .token.number  { color: #d19a66; }
+
+    /* Why HugeRTE */
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .why-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.75rem;
+    }
+    .why-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .why-card p { color: var(--text-muted); font-size: 0.95rem; }
+    .check-icon {
+      width: 22px; height: 22px;
+      flex-shrink: 0;
+      color: #22c55e;
+    }
+
+    /* Plugins */
+    .plugins-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .plugin-chip {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.45rem 0.95rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-family: 'Fira Code', monospace;
+      transition: all 0.2s ease;
+    }
+    .plugin-chip:hover {
+      border-color: var(--accent-color);
+      color: var(--text-main);
+      background: rgba(59,130,246,0.08);
+    }
+
+    /* Migration callout */
+    .migration {
+      background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(167,139,250,0.06));
+      border: 1px solid rgba(59,130,246,0.25);
+      border-radius: 1rem;
+      padding: 2.5rem;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+    .migration h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .migration p {
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .migration-steps {
+      list-style: none;
+      counter-reset: step;
+      margin-top: 1rem;
+    }
+    .migration-steps li {
+      counter-increment: step;
+      padding: 0.6rem 0 0.6rem 2.5rem;
+      position: relative;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .migration-steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0.55rem;
+      width: 28px; height: 28px;
+      background: var(--gradient-accent);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+    .migration-steps li code {
+      background: rgba(255,255,255,0.05);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    /* Community */
+    .community-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .community-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .community-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .community-card p { color: var(--text-muted); font-size: 0.95rem; flex-grow: 1; }
+    .community-card a {
+      color: #93c5fd;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .community-card a:hover { color: #fff; }
+
+    /* CTA */
+    .cta {
+      text-align: center;
+      padding: 6rem 0;
+      position: relative;
+    }
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px; height: 400px;
+      background: radial-gradient(ellipse, rgba(167, 139, 250, 0.18) 0%, transparent 70%);
+      z-index: -1;
+      pointer-events: none;
+    }
+    .cta h2 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .cta p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 560px;
+      margin: 0 auto 2rem;
+    }
+    .cta-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 3.5rem 0 2rem;
+      color: var(--text-muted);
+      background: #030305;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .footer-col h4 {
+      color: var(--text-main);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .footer-col a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--text-main); }
+    .footer-brand p {
+      font-size: 0.9rem;
+      max-width: 280px;
+      margin-top: 0.75rem;
+    }
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.85rem;
+      color: var(--text-subtle);
+    }
+    .footer-bottom a { color: var(--text-muted); }
+
+    /* HugeRTE editor theming overrides — keep editor visually integrated */
+    .tox-tinymce, .tox.tox-tinymce {
+      border-radius: 0.6rem !important;
+      border: 1px solid var(--border-color) !important;
+      overflow: hidden;
+    }
+
+    @media (max-width: 880px) {
+      .migration { grid-template-columns: 1fr; padding: 1.75rem; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .nav-links a:not(.btn) { display: none; }
+      .hero { padding: 5rem 0 3rem; }
+      section { padding: 3.5rem 0; }
+      .footer-grid { grid-template-columns: 1fr; gap: 1.75rem; }
+      .container, .container-narrow { padding: 0 1.25rem; }
+      .demo-shell { padding: 1rem; }
+      .tab-panels { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container nav-inner">
+      <a href="/" class="brand">HugeRTE</a>
+      <div class="nav-links">
+        <a href="#demo">Demo</a>
+        <a href="#features">Features</a>
+        <a href="#integrations">Integrations</a>
+        <a href="https://github.com/hugerte/hugerte-docs">Docs</a>
+        <a href="https://github.com/hugerte/hugerte" class="btn btn-ghost">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero container">
+
+    <h1>Rich Text Editing.<br><span>Without the Limits.</span></h1>
+    <p class="lead">
+      HugeRTE is a free, MIT-licensed, open-source WYSIWYG editor — forked from the last MIT version of TinyMCE.
+      Packed with features, beautifully designed for modern web apps, and free forever.
+    </p>
+    <div class="hero-cta">
+      <a href="#demo" class="btn btn-primary">Try the Live Demo</a>
+      <a href="#integrations" class="btn btn-ghost">Get Started →</a>
+    </div>
+    <div class="hero-meta">
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.6 4.6A9 9 0 1112 3a9 9 0 018.6 11.6z"/></svg>
+        100% Open Source
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+        Loads from jsDelivr CDN
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        React · Vue · Angular · Blazor
+      </span>
+    </div>
+  </header>
+
+  <!-- LIVE DEMO -->
+  <section id="demo" class="demo">
+    <div class="container">
+      <div class="section-header">
+        <div class="eyebrow">Live Demo</div>
+        <h2>Try HugeRTE right here, right now</h2>
+        <p>This editor is loaded directly from the <a href="https://www.jsdelivr.com/package/npm/hugerte" target="_blank" rel="noopener">jsDelivr CDN</a> — no install required. Edit the content, try the toolbar, paste images, write code samples.</p>
+      </div>
+
+        <noscript>
+          <div class="noscript-warning">
+            ⚠️ JavaScript must be enabled to try the HugeRTE live demo.
+          </div>
+        </noscript>
+
+        <div id="demo-spinner">
+          <div class="ring" role="status" aria-label="Loading HugeRTE"></div>
+          <span>Loading…</span>
+        </div>
+
+        <div id="editor-host">
+          <textarea id="editor"><h2>Welcome to HugeRTE 👋</h2>
+<p>This is a fully working <strong>HugeRTE</strong> editor. Try things out:</p>
+<ul>
+  <li>Format text with <strong>bold</strong>, <em>italic</em> or <u>underline</u>.</li>
+  <li>Insert links, images, tables, code samples or emoji 😎.</li>
+  <li>Switch to fullscreen, preview, or edit the raw HTML via the <em>Code</em> button.</li>
+</ul>
+<p>HugeRTE is a free, open-source WYSIWYG editor — <a href="https://github.com/hugerte/hugerte">view the source on GitHub</a>.</p></textarea>
+        </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="features">
+    <div class="container">
+      <div class="section-header">
+        <div class="eyebrow">Features</div>
+        <h2>Everything you need. Nothing you don't pay for.</h2>
+        <p>HugeRTE ships with a comprehensive feature set out of the box. No paywalls, no upsells, no telemetry.</p>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+          </div>
+          <h3>30+ Plugins</h3>
+          <p>Tables, images, code samples, accordions, emoji, autosave, fullscreen, search & replace, and many more — all included.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 4v6c0 5-4 9-9 10-5-1-9-5-9-10V6l9-4z"/></svg>
+          </div>
+          <h3>MIT Licensed</h3>
+          <p>Permissive license. Use it in personal, commercial, or proprietary projects without obligations or attribution.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <h3>No API Key</h3>
+          <p>Just drop it in. No account, no domain restrictions, no API keys to manage or rotate.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          </div>
+          <h3>Customizable Toolbar</h3>
+          <p>Build the toolbar that matches your product — choose buttons, group them, or render the editor inline.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+          </div>
+          <h3>Framework Wrappers</h3>
+          <p>First-class integrations for React, Vue (2 & 3), Angular and Blazor — community wrappers for Rails, Laravel Nova & more.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>
+          </div>
+          <h3>Localized</h3>
+          <p>Use any of the TinyMCE 6 community language packs. Just rename the global and import — fully bundlable.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+          </div>
+          <h3>Bundler Ready</h3>
+          <p>Bundle HugeRTE into your Vite, Rollup or Webpack pipeline using ES6 imports — including skins, themes & plugins.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/><path d="M22 4L12 14.01l-3-3"/></svg>
+          </div>
+          <h3>Battle-tested Core</h3>
+          <p>Built on the proven TinyMCE 6 codebase, with HugeRTE-specific bug fixes and improvements on top.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTEGRATIONS / SWITCHER -->
+  <section id="integrations">
+    <div class="container">
+      <div class="section-header">
+        <div class="eyebrow">Get started in seconds</div>
+        <h2>Build with your favorite stack</h2>
+        <p>Pick your framework and copy the snippet. Detailed docs and examples are linked under each one.</p>
+      </div>
+
+      <div class="integrations-card">
+        <div class="tabs" role="tablist">
+          <button class="tab active" role="tab" data-tab="cdn"><span class="tab-icon"><iconify-icon icon="simple-icons:jsdelivr" style="color:#e3a008;"></iconify-icon></span>CDN</button>
+          <button class="tab" role="tab" data-tab="npm"><span class="tab-icon"><iconify-icon icon="logos:npm-icon"></iconify-icon></span>npm</button>
+          <button class="tab" role="tab" data-tab="react"><span class="tab-icon"><iconify-icon icon="logos:react"></iconify-icon></span>React</button>
+          <button class="tab" role="tab" data-tab="vue"><span class="tab-icon"><iconify-icon icon="logos:vue"></iconify-icon></span>Vue</button>
+          <button class="tab" role="tab" data-tab="angular"><span class="tab-icon"><iconify-icon icon="logos:angular-icon"></iconify-icon></span>Angular</button>
+          <button class="tab" role="tab" data-tab="blazor"><span class="tab-icon"><iconify-icon icon="simple-icons:blazor" style="color:#512bd4;"></iconify-icon></span>Blazor</button>
+        </div>
+
+        <div class="tab-panels">
+
+          <!-- CDN -->
+          <div class="tab-panel active" data-panel="cdn" role="tabpanel">
+            <h3>Drop-in via jsDelivr</h3>
+            <p class="panel-desc">The fastest way to get HugeRTE running. No bundler, no install — just a script tag.</p>
+            <pre><code><span class="code-label">HTML</span><span class="token tag">&lt;textarea</span> <span class="token attr">id</span>=<span class="token string">"editor"</span><span class="token tag">&gt;&lt;/textarea&gt;</span>
+
+<span class="token tag">&lt;script</span> <span class="token attr">src</span>=<span class="token string">"https://cdn.jsdelivr.net/npm/hugerte@1/hugerte.min.js"</span><span class="token tag">&gt;&lt;/script&gt;</span>
+<span class="token tag">&lt;script&gt;</span>
+  <span class="token function">hugerte</span>.<span class="token function">init</span>({
+    selector: <span class="token string">'#editor'</span>,
+    plugins: <span class="token string">'lists link image table code emoticons fullscreen'</span>,
+    toolbar: <span class="token string">'undo redo | bold italic | bullist numlist | link image | code'</span>
+  });
+<span class="token tag">&lt;/script&gt;</span></code></pre>
+            <div class="tab-panel-actions">
+              <a href="https://www.jsdelivr.com/package/npm/hugerte" target="_blank" rel="noopener" class="btn btn-ghost">jsDelivr Package →</a>
+              <a href="https://github.com/hugerte/hugerte-docs" target="_blank" rel="noopener" class="btn btn-ghost">Full Docs →</a>
+            </div>
+          </div>
+
+          <!-- npm -->
+          <div class="tab-panel" data-panel="npm" role="tabpanel">
+            <h3>Install via npm / yarn / composer</h3>
+            <p class="panel-desc">Self-host HugeRTE or bundle it directly into your application code.</p>
+            <pre><code><span class="code-label">Shell</span><span class="token comment"># npm</span>
+npm install hugerte
+
+<span class="token comment"># yarn</span>
+yarn add hugerte
+
+<span class="token comment"># composer (PHP)</span>
+composer require hugerte/hugerte</code></pre>
+            <pre style="margin-top: 1rem;"><code><span class="code-label">JS (ESM)</span><span class="token keyword">import</span> hugerte <span class="token keyword">from</span> <span class="token string">'hugerte'</span>;
+<span class="token keyword">import</span> <span class="token string">'hugerte/models/dom'</span>;
+<span class="token keyword">import</span> <span class="token string">'hugerte/themes/silver'</span>;
+<span class="token keyword">import</span> <span class="token string">'hugerte/icons/default'</span>;
+<span class="token keyword">import</span> <span class="token string">'hugerte/skins/ui/oxide/skin.js'</span>;
+<span class="token keyword">import</span> <span class="token string">'hugerte/plugins/lists'</span>;
+
+hugerte.<span class="token function">init</span>({
+  selector: <span class="token string">'#editor'</span>,
+  plugins: <span class="token string">'lists'</span>,
+  skin_url: <span class="token string">'default'</span>,
+  content_css: <span class="token string">'default'</span>
+});</code></pre>
+            <div class="tab-panel-actions">
+              <a href="https://www.npmjs.com/package/hugerte" target="_blank" rel="noopener" class="btn btn-ghost">npm Package →</a>
+              <a href="https://github.com/hugerte/hugerte-docs#bundling" target="_blank" rel="noopener" class="btn btn-ghost">Bundling Guide →</a>
+            </div>
+          </div>
+
+          <!-- React -->
+          <div class="tab-panel" data-panel="react" role="tabpanel">
+            <h3>React</h3>
+            <p class="panel-desc">A native React wrapper. Loads HugeRTE from the CDN by default — or use your own bundled copy.</p>
+            <pre><code><span class="code-label">Shell</span>npm install @hugerte/hugerte-react</code></pre>
+            <pre style="margin-top: 1rem;"><code><span class="code-label">JSX</span><span class="token keyword">import</span> { Editor } <span class="token keyword">from</span> <span class="token string">'@hugerte/hugerte-react'</span>;
+
+<span class="token keyword">export default function</span> <span class="token function">App</span>() {
+  <span class="token keyword">return</span> (
+    <span class="token tag">&lt;Editor</span>
+      <span class="token attr">init</span>={{
+        height: <span class="token number">500</span>,
+        menubar: <span class="token keyword">false</span>,
+        plugins: [<span class="token string">'lists'</span>, <span class="token string">'link'</span>, <span class="token string">'image'</span>, <span class="token string">'code'</span>],
+        toolbar: <span class="token string">'undo redo | bold italic | bullist numlist | link image | code'</span>
+      }}
+      <span class="token attr">initialValue</span>=<span class="token string">"&lt;p&gt;Hello from HugeRTE!&lt;/p&gt;"</span>
+    <span class="token tag">/&gt;</span>
+  );
+}</code></pre>
+            <div class="tab-panel-actions">
+              <a href="https://github.com/hugerte/hugerte-react" target="_blank" rel="noopener" class="btn btn-ghost">GitHub Repo →</a>
+              <a href="https://github.com/hugerte/hugerte-docs/blob/main/integrations/react.md" target="_blank" rel="noopener" class="btn btn-ghost">React Docs →</a>
+            </div>
+          </div>
+
+          <!-- Vue -->
+          <div class="tab-panel" data-panel="vue" role="tabpanel">
+            <h3>Vue 2 & 3</h3>
+            <p class="panel-desc">A drop-in component supporting <code style="background: rgba(255,255,255,0.05); padding: 0.1rem 0.35rem; border-radius: 4px;">v-model</code>, both Vue 2 and Vue 3 are supported.</p>
+            <pre><code><span class="code-label">Shell</span>npm install @hugerte/hugerte-vue</code></pre>
+            <pre style="margin-top: 1rem;"><code><span class="code-label">Vue SFC</span><span class="token tag">&lt;template&gt;</span>
+  <span class="token tag">&lt;Editor</span>
+    <span class="token attr">v-model</span>=<span class="token string">"content"</span>
+    <span class="token attr">:init</span>=<span class="token string">"{
+      height: 500,
+      plugins: 'lists link image code',
+      toolbar: 'undo redo | bold italic | bullist numlist | link image | code'
+    }"</span>
+  <span class="token tag">/&gt;</span>
+<span class="token tag">&lt;/template&gt;</span>
+
+<span class="token tag">&lt;script</span> <span class="token attr">setup</span><span class="token tag">&gt;</span>
+<span class="token keyword">import</span> Editor <span class="token keyword">from</span> <span class="token string">'@hugerte/hugerte-vue'</span>;
+<span class="token keyword">import</span> { ref } <span class="token keyword">from</span> <span class="token string">'vue'</span>;
+
+<span class="token keyword">const</span> content = <span class="token function">ref</span>(<span class="token string">'&lt;p&gt;Hello from HugeRTE!&lt;/p&gt;'</span>);
+<span class="token tag">&lt;/script&gt;</span></code></pre>
+            <div class="tab-panel-actions">
+              <a href="https://github.com/hugerte/hugerte-vue" target="_blank" rel="noopener" class="btn btn-ghost">GitHub Repo →</a>
+              <a href="https://github.com/hugerte/hugerte-docs/blob/main/integrations/vue.md" target="_blank" rel="noopener" class="btn btn-ghost">Vue Docs →</a>
+            </div>
+          </div>
+
+          <!-- Angular -->
+          <div class="tab-panel" data-panel="angular" role="tabpanel">
+            <h3>Angular 17+</h3>
+            <p class="panel-desc">Native Angular integration with full support for Reactive Forms, <code style="background: rgba(255,255,255,0.05); padding: 0.1rem 0.35rem; border-radius: 4px;">ngModel</code>, and event binding.</p>
+            <pre><code><span class="code-label">Shell</span>npm install @hugerte/hugerte-angular</code></pre>
+            <pre style="margin-top: 1rem;"><code><span class="code-label">TypeScript</span><span class="token keyword">import</span> { Component } <span class="token keyword">from</span> <span class="token string">'@angular/core'</span>;
+<span class="token keyword">import</span> { EditorComponent } <span class="token keyword">from</span> <span class="token string">'@hugerte/hugerte-angular'</span>;
+
+@<span class="token function">Component</span>({
+  selector: <span class="token string">'app-root'</span>,
+  standalone: <span class="token keyword">true</span>,
+  imports: [EditorComponent],
+  template: <span class="token string">`
+    &lt;editor
+      [init]="{
+        height: 500,
+        plugins: 'lists link image code',
+        toolbar: 'undo redo | bold italic | bullist numlist | link image | code'
+      }"
+      [(ngModel)]="content"
+    &gt;&lt;/editor&gt;
+  `</span>
+})
+<span class="token keyword">export class</span> <span class="token function">AppComponent</span> {
+  content = <span class="token string">'&lt;p&gt;Hello from HugeRTE!&lt;/p&gt;'</span>;
+}</code></pre>
+            <div class="tab-panel-actions">
+              <a href="https://github.com/hugerte/hugerte-angular" target="_blank" rel="noopener" class="btn btn-ghost">GitHub Repo →</a>
+              <a href="https://github.com/hugerte/hugerte-docs/blob/main/integrations/angular.md" target="_blank" rel="noopener" class="btn btn-ghost">Angular Docs →</a>
+            </div>
+          </div>
+
+          <!-- Blazor -->
+          <div class="tab-panel" data-panel="blazor" role="tabpanel">
+            <h3>Blazor (Server & WASM)</h3>
+            <p class="panel-desc">First-class support for Blazor WebAssembly and Blazor Server with C# bindings, distributed via NuGet.</p>
+            <pre><code><span class="code-label">Shell</span>dotnet add package HugeRTE.Blazor</code></pre>
+            <pre style="margin-top: 1rem;"><code><span class="code-label">Razor</span>@<span class="token keyword">using</span> HugeRTE.Blazor
+
+<span class="token tag">&lt;Editor</span>
+    <span class="token attr">Conf</span>=<span class="token string">"@(new Dictionary&lt;string, object&gt;
+    {
+        { "height", 500 },
+        { "menubar", false },
+        { "plugins", "lists link image code" },
+        { "toolbar", "undo redo | bold italic | bullist numlist | link image | code" }
+    })"</span>
+    <span class="token attr">@bind-Value</span>=<span class="token string">"content"</span>
+<span class="token tag">/&gt;</span>
+
+@<span class="token keyword">code</span> {
+    <span class="token keyword">private string</span> content = <span class="token string">"&lt;p&gt;Hello from HugeRTE!&lt;/p&gt;"</span>;
+}</code></pre>
+            <div class="tab-panel-actions">
+              <a href="https://github.com/hugerte/hugerte-blazor" target="_blank" rel="noopener" class="btn btn-ghost">GitHub Repo →</a>
+              <a href="https://www.nuget.org/packages/HugeRTE.Blazor" target="_blank" rel="noopener" class="btn btn-ghost">NuGet Package →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <p style="text-align: center; margin-top: 1.5rem; color: var(--text-subtle); font-size: 0.9rem;">
+        Looking for Svelte, jQuery, Rails, or Laravel Nova?
+        <a href="https://github.com/hugerte/hugerte-docs#integrations-with-frameworks-and-other-tools" target="_blank" rel="noopener" style="color: #93c5fd;">See community integrations →</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- WHY HUGERTE -->
+  <section style="background: var(--bg-surface);">
+    <div class="container">
+      <div class="section-header">
+        <div class="eyebrow">Why HugeRTE</div>
+        <h2>Forked when it mattered. Maintained for everyone.</h2>
+        <p>When TinyMCE switched to a GPL-or-pay license, we forked the last MIT-licensed commit so the web stays open.</p>
+      </div>
+
+      <div class="why-grid">
+        <div class="why-card">
+          <h3>
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4m5.6 4.6A9 9 0 1112 3a9 9 0 018.6 11.6z"/></svg>
+            Free Forever
+          </h3>
+          <p>No paid tiers, no hidden API quotas. HugeRTE is and will remain MIT-licensed and free for all use cases.</p>
+        </div>
+        <div class="why-card">
+          <h3>
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4m5.6 4.6A9 9 0 1112 3a9 9 0 018.6 11.6z"/></svg>
+            Full TinyMCE Power
+          </h3>
+          <p>All the features of TinyMCE 6 — editor APIs, plugins, themes, skins, localization — minus the licensing strings.</p>
+        </div>
+        <div class="why-card">
+          <h3>
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4m5.6 4.6A9 9 0 1112 3a9 9 0 018.6 11.6z"/></svg>
+            Active Maintenance
+          </h3>
+          <p>Bug fixes, improvements and new features land regularly. We track upstream changes where licensing allows: for the framework integrations.</p>
+        </div>
+        <div class="why-card">
+          <h3>
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4m5.6 4.6A9 9 0 1112 3a9 9 0 018.6 11.6z"/></svg>
+            Drop-in Migration
+          </h3>
+          <p>Switching from TinyMCE? Replace <code style="background: rgba(255,255,255,0.05); padding: 0.1rem 0.35rem; border-radius: 4px;">tinymce</code> with <code style="background: rgba(255,255,255,0.05); padding: 0.1rem 0.35rem; border-radius: 4px;">hugerte</code> — that's it for most projects.</p>
+        </div>
+        <div class="why-card">
+          <h3>
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4m5.6 4.6A9 9 0 1112 3a9 9 0 018.6 11.6z"/></svg>
+            Privacy-respecting
+          </h3>
+          <p>No accounts, no telemetry, no remote services required. Your content never leaves your application.</p>
+        </div>
+        <div class="why-card">
+          <h3>
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4m5.6 4.6A9 9 0 1112 3a9 9 0 018.6 11.6z"/></svg>
+            Community Driven
+          </h3>
+          <p>Open development on GitHub. Issues, discussions, surveys — your input shapes the roadmap.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLUGINS -->
+  <section>
+    <div class="container">
+      <div class="section-header">
+        <div class="eyebrow">Plugins</div>
+        <h2>30+ plugins, all included</h2>
+        <p>Enable only what you need by listing them in the <code style="background: var(--bg-surface); padding: 0.1rem 0.4rem; border-radius: 4px; border: 1px solid var(--border-color);">plugins</code> option.</p>
+      </div>
+
+      <div class="plugins-list">
+        <span class="plugin-chip">accordion</span>
+        <span class="plugin-chip">advlist</span>
+        <span class="plugin-chip">anchor</span>
+        <span class="plugin-chip">autolink</span>
+        <span class="plugin-chip">autoresize</span>
+        <span class="plugin-chip">autosave</span>
+        <span class="plugin-chip">charmap</span>
+        <span class="plugin-chip">code</span>
+        <span class="plugin-chip">codesample</span>
+        <span class="plugin-chip">directionality</span>
+        <span class="plugin-chip">emoticons</span>
+        <span class="plugin-chip">fullscreen</span>
+        <span class="plugin-chip">help</span>
+        <span class="plugin-chip">image</span>
+        <span class="plugin-chip">importcss</span>
+        <span class="plugin-chip">insertdatetime</span>
+        <span class="plugin-chip">link</span>
+        <span class="plugin-chip">lists</span>
+        <span class="plugin-chip">media</span>
+        <span class="plugin-chip">nonbreaking</span>
+        <span class="plugin-chip">pagebreak</span>
+        <span class="plugin-chip">preview</span>
+        <span class="plugin-chip">quickbars</span>
+        <span class="plugin-chip">save</span>
+        <span class="plugin-chip">searchreplace</span>
+        <span class="plugin-chip">table</span>
+        <span class="plugin-chip">template</span>
+        <span class="plugin-chip">visualblocks</span>
+        <span class="plugin-chip">visualchars</span>
+        <span class="plugin-chip">wordcount</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MIGRATION -->
+  <section>
+    <div class="container-narrow">
+      <div class="migration">
+        <div>
+          <div class="eyebrow">Coming from TinyMCE?</div>
+          <h2>Migration takes minutes, not days</h2>
+          <p>Most projects migrate by doing a global replace and updating their package.json. HugeRTE's API is fully compatible with TinyMCE 6.</p>
+          <a href="https://github.com/hugerte/hugerte-docs#migrate-from-tinymce" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top: 0.5rem;">Read the Migration Guide →</a>
+        </div>
+        <ol class="migration-steps">
+          <li>Replace <code>tinymce</code> with <code>hugerte</code> in your code.</li>
+          <li>Swap the <code>tinymce</code> package for <code>hugerte</code>.</li>
+          <li>Replace integration packages: <code>@tinymce/tinymce-react</code> → <code>@hugerte/hugerte-react</code>.</li>
+          <li>Review the changelog for any prop changes.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMUNITY -->
+  <section style="background: var(--bg-surface);">
+    <div class="container">
+      <div class="section-header">
+        <div class="eyebrow">Community</div>
+        <h2>Get help, contribute, shape the roadmap</h2>
+      </div>
+
+      <div class="community-grid">
+        <div class="community-card">
+          <h3>📚 Documentation</h3>
+          <p>Setup, bundling, integrations, and reference for the HugeRTE editor and its framework wrappers.</p>
+          <a href="https://github.com/hugerte/hugerte-docs" target="_blank" rel="noopener">Browse the docs →</a>
+        </div>
+        <div class="community-card">
+          <h3>💬 Discussions</h3>
+          <p>Ask questions, share what you're building, and request integrations on GitHub Discussions.</p>
+          <a href="https://github.com/orgs/hugerte/discussions" target="_blank" rel="noopener">Join the conversation →</a>
+        </div>
+        <div class="community-card">
+          <h3>🐛 Issue Tracker</h3>
+          <p>Found a bug? Have a feature idea? Open an issue on the main HugeRTE repository.</p>
+          <a href="https://github.com/hugerte/hugerte/issues" target="_blank" rel="noopener">Report an issue →</a>
+        </div>
+        <div class="community-card">
+          <h3>💖 Sponsor</h3>
+          <p>HugeRTE is maintained by volunteers. Sponsor on OpenCollective to help keep it free and well-maintained.</p>
+          <a href="https://opencollective.com/hugerte" target="_blank" rel="noopener">Support on OpenCollective →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="container">
+      <h2>Ready to ditch the API key?</h2>
+      <p>Add a script tag, install a package, or fork our integrations. HugeRTE is yours — free, MIT-licensed, no strings attached.</p>
+      <div class="cta-actions">
+        <a href="#integrations" class="btn btn-primary" style="font-size: 1.05rem; padding: 0.85rem 2rem;">Get Started</a>
+        <a href="https://github.com/hugerte/hugerte" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size: 1.05rem; padding: 0.85rem 2rem;">Star on GitHub ★</a>
+        <a href="https://opencollective.com/hugerte" target="_blank" rel="noopener" class="btn btn-pink" style="font-size: 1.05rem; padding: 0.85rem 2rem;">💖 Support us</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col footer-brand">
+          <a href="/" class="brand">HugeRTE</a>
+          <p>The free, open-source, MIT-licensed WYSIWYG editor. Forked from TinyMCE. Built for everyone.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#demo">Live Demo</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#integrations">Integrations</a></li>
+            <li><a href="https://github.com/hugerte/hugerte/blob/main/modules/hugerte/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="https://github.com/hugerte/hugerte-docs" target="_blank" rel="noopener">Documentation</a></li>
+            <li><a href="https://github.com/hugerte/hugerte-docs#bundling" target="_blank" rel="noopener">Bundling Guide</a></li>
+            <li><a href="https://github.com/hugerte/hugerte-docs#migrate-from-tinymce" target="_blank" rel="noopener">Migrate from TinyMCE</a></li>
+            <li><a href="https://www.jsdelivr.com/package/npm/hugerte" target="_blank" rel="noopener">jsDelivr CDN</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://github.com/hugerte/hugerte" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://github.com/orgs/hugerte/discussions" target="_blank" rel="noopener">Discussions</a></li>
+            <li><a href="https://opencollective.com/hugerte" target="_blank" rel="noopener">OpenCollective</a></li>
+            <li><a href="https://github.com/hugerte/hugerte/blob/main/LICENSE.TXT" target="_blank" rel="noopener">License (MIT)</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span id="year">2025</span> HugeRTE Contributors. Released under the MIT License. Forked from <a href="https://github.com/tinymce/tinymce" target="_blank" rel="noopener">TinyMCE</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- HugeRTE Live Editor -->
+  <script src="https://cdn.jsdelivr.net/npm/hugerte@1/hugerte.min.js"></script>
+  <script>
+    (function () {
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // Tab switcher
+      var tabs = document.querySelectorAll('.tab');
+      var panels = document.querySelectorAll('.tab-panel');
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          var target = tab.getAttribute('data-tab');
+          tabs.forEach(function (t) { t.classList.remove('active'); });
+          panels.forEach(function (p) { p.classList.remove('active'); });
+          tab.classList.add('active');
+          var panel = document.querySelector('.tab-panel[data-panel="' + target + '"]');
+          if (panel) panel.classList.add('active');
+        });
+      });
+
+      // Initialize HugeRTE editor
+      if (typeof hugerte !== 'undefined') {
+        hugerte.init({
+          selector: '#editor',
+          height: 520,
+          menubar: 'file edit view insert format tools table help',
+          plugins: 'accordion advlist anchor autolink autosave charmap code codesample directionality emoticons fullscreen help image insertdatetime link lists media nonbreaking pagebreak preview quickbars save searchreplace table visualblocks visualchars wordcount',
+          toolbar: 'undo redo | blocks | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | emoticons codesample | code fullscreen preview | help',
+          toolbar_mode: 'sliding',
+          skin: 'oxide-dark',
+          content_css: 'dark',
+          branding: false,
+          promotion: false,
+          contextmenu: 'link image table',
+          init_instance_callback: function () {
+            var spinner = document.getElementById('demo-spinner');
+            if (spinner) spinner.remove();
+            var host = document.getElementById('editor-host');
+            if (host) host.classList.add('ready');
+          }
+        });
+      } else {
+        var spinner = document.getElementById('demo-spinner');
+        if (spinner) {
+          spinner.innerHTML = '<span style="color:#fbbf24;">⚠️ Failed to load HugeRTE. Please check your network or try again later.</span>';
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

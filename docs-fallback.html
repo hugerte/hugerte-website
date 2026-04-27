@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Docs – HugeRTE</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #050505;
+      color: #f3f4f6;
+      line-height: 1.7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a { color: #60a5fa; }
+    a:hover { color: #93c5fd; }
+    header {
+      border-bottom: 1px solid #27272a;
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+    }
+    header a.brand {
+      font-size: 1.3rem;
+      font-weight: 900;
+      text-decoration: none;
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    main {
+      flex: 1;
+      max-width: 760px;
+      margin: 4rem auto;
+      padding: 0 1.5rem;
+      width: 100%;
+    }
+    .eyebrow {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #a78bfa;
+      margin-bottom: 0.75rem;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+    }
+    .card {
+      background: #0f0f11;
+      border: 1px solid #27272a;
+      border-radius: 0.75rem;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .card p { color: #9ca3af; font-size: 0.97rem; }
+    .card p + p { margin-top: 0.75rem; }
+    code {
+      background: #1a1a1f;
+      border: 1px solid #27272a;
+      padding: 0.1em 0.4em;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.88em;
+      color: #e5e7eb;
+    }
+    .link-row {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.55rem 1.25rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+    .btn-primary {
+      background: #3b82f6;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(59,130,246,0.35);
+    }
+    .btn-primary:hover { background: #2563eb; color: #fff; }
+    .btn-ghost {
+      background: transparent;
+      color: #f3f4f6;
+      border-color: #3f3f46;
+    }
+    .btn-ghost:hover { border-color: #9ca3af; }
+    footer {
+      border-top: 1px solid #27272a;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.85rem;
+    }
+    footer a { color: #6b7280; }
+    footer a:hover { color: #9ca3af; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="brand">HugeRTE</a>
+  </header>
+
+  <main>
+    <div class="eyebrow">Documentation</div>
+    <h1>We don't have docs for this page yet.</h1>
+
+    <div class="card">
+      <p>
+        HugeRTE's documentation is still being written. In the meantime, the
+        <a href="#" id="tinymce-link">equivalent TinyMCE 6 docs page</a> covers the same topic —
+        just replace every occurrence of <code>tinymce</code> with <code>hugerte</code> in your code.
+      </p>
+      <p>
+        Note that the TinyMCE docs are licensed under
+        <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener">CC BY-NC-SA 3.0</a>,
+        so we are writing our own MIT-licensed docs from scratch rather than copying theirs.
+        The <a href="https://github.com/hugerte/hugerte-docs" target="_blank" rel="noopener">hugerte-docs repo</a>
+        is where that work is happening.
+      </p>
+      <div class="link-row">
+        <a href="#" id="tinymce-btn" class="btn btn-primary" target="_blank" rel="noopener">Open TinyMCE 6 docs →</a>
+        <a href="https://github.com/hugerte/hugerte-docs" target="_blank" rel="noopener" class="btn btn-ghost">HugeRTE docs repo</a>
+        <a href="/" class="btn btn-ghost">← Back to home</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> HugeRTE Contributors &mdash; <a href="https://github.com/hugerte/hugerte/blob/main/LICENSE.TXT" target="_blank" rel="noopener">MIT License</a></p>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    var page = location.pathname.replace(/^\/docs\/hugerte\/1\/?/, '').replace(/\/$/, '');
+    var target = 'https://www.tiny.cloud/docs/tinymce/6/' + page + '/' + location.hash;
+    document.getElementById('tinymce-link').href = target;
+    document.getElementById('tinymce-btn').href = target;
+  </script>
+</body>
+</html>
